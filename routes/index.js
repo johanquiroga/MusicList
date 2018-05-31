@@ -4,7 +4,7 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.json({ title: 'MusicList Alpha' });
+  res.render('index', { title: 'MusicList Alpha' });
 });
 
 module.exports = router;
