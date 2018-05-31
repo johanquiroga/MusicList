@@ -10,7 +10,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const index = require('./routes/index');
 const api = require('./routes/api/index');
-const users = require('./routes/users');
+const users = require('./routes/api/users');
 
 const app = express();
 // Connect Mongoose
@@ -37,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/api', api);
+app.use('/api/users', users);
 
 // Configure Passport
 const User = require('./models/user');
