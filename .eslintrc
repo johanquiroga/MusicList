@@ -7,6 +7,8 @@
     "node": true
   },
   "rules": {
-    "no-unused-vars": ["error", {"argsIgnorePattern":"next"}]
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
+    "react/prop-types": [0],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
   }
 }

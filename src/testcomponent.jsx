@@ -1,9 +1,11 @@
 import React from 'react';
 
-export default function testcomponent() {
+export default function testcomponent(props) {
+  const { headline, count, showCount } = props;
   return (
     <div>
-      <h1>React Test Component</h1>
+      <h1>{headline}</h1>
+      { showCount ? <p>{count}</p> : null }
     </div>
   );
 }
