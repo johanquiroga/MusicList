@@ -21,7 +21,7 @@ class LoginPage extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <Label htmlFor="examplePassword">Email</Label>
+              <Label htmlFor="examplePassword">Password</Label>
               <Input
                 type="password"
                 name="password"
