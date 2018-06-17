@@ -2,7 +2,7 @@ import React from 'react';
 
 import Sidebar from '../shared/Sidebar';
 
-export default function ProfilePage(props) {
+const ProfilePage = (props) => {
   const { match } = props;
 
   return (
@@ -13,4 +13,6 @@ export default function ProfilePage(props) {
       <Sidebar />
     </div>
   );
-}
+};
+
+export default ProfilePage;
