@@ -1,3 +1,4 @@
+require('babel-register');
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -13,7 +14,7 @@ const expressSession = require('express-session')({
   saveUninitialized: false,
 });
 const webpack = require('webpack');
-const webpackConfig = require('./webpack.config');
+const webpackConfig = require('./webpack.config.babel');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
@@ -44,18 +45,20 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Webpack Server
-const webpackCompiler = webpack(webpackConfig);
-app.use(webpackDevMiddleware(webpackCompiler, {
-  publicPath: webpackConfig.output.publicPath,
-  stats: {
-    colors: true,
-    chunks: true,
-    'errors-only': true,
-  },
-}));
-app.use(webpackHotMiddleware(webpackCompiler, {
-  log: console.log,
-}));
+if (process.env.NODE_ENV !== 'production') {
+  const webpackCompiler = webpack(webpackConfig);
+  app.use(webpackDevMiddleware(webpackCompiler, {
+    publicPath: webpackConfig.output.publicPath,
+    stats: {
+      colors: true,
+      chunks: true,
+      'errors-only': true,
+    },
+  }));
+  app.use(webpackHotMiddleware(webpackCompiler, {
+    log: console.log,
+  }));
+}
 
 app.use('/api', api);
 app.use('/api/users', users);
