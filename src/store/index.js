@@ -1,11 +1,31 @@
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
+import { logger } from 'redux-logger';
 
+import DevTools from '../components/shared/DevTools';
 import progress from '../reducers/progress';
 
 const combinedReducers = combineReducers({
   progress,
 });
 
-const store = createStore(combinedReducers);
+const enhancer = compose(
+  applyMiddleware(logger),
+  DevTools.instrument(),
+);
 
-export default store;
+const configureStore = (initialState) => {
+  const store = createStore(combinedReducers, initialState, enhancer);
+
+  // Hot reload reducers
+  if (module.hot) {
+    module.hot.accept(
+      '../reducers/progress',
+      () =>
+        store.replaceReducer(progress),
+    );
+  }
+
+  return store;
+};
+
+export default configureStore;
