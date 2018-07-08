@@ -16,8 +16,10 @@ export default (state = initialState, action) => {
         isLoggingIn: true,
       };
     case 'AUTHENTICATION_LOGIN_FAILURE':
-      return initialState;
-    case 'AUTHENTICATION_LOGIN_SUCCESS': {
+    case 'AUTHENTICATION_SESSION_CHECK_FAILURE':
+      return { ...initialState };
+    case 'AUTHENTICATION_LOGIN_SUCCESS':
+    case 'AUTHENTICATION_SESSION_CHECK_SUCCESS': {
       const newState = {
         ...state,
       };
