@@ -20,8 +20,11 @@ const configureStore = (initialState) => {
 
   // Hot reload reducers
   if (module.hot) {
-    module.hot.accept('../reducers', () =>
-      store.replaceReducer(reducers));
+    module.hot.accept('../reducers', () => {
+      /* eslint-disable-next-line global-require */
+      const nextReducers = require('../reducers');
+      store.replaceReducer(nextReducers);
+    });
   }
 
   return store;
