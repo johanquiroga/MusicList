@@ -17,6 +17,7 @@ export default (state = initialState, action) => {
       };
     case 'AUTHENTICATION_LOGIN_FAILURE':
     case 'AUTHENTICATION_SESSION_CHECK_FAILURE':
+    case 'AUTHENTICATION_LOGOUT_SUCCESS':
       return { ...initialState };
     case 'AUTHENTICATION_LOGIN_SUCCESS':
     case 'AUTHENTICATION_SESSION_CHECK_SUCCESS': {
@@ -33,6 +34,9 @@ export default (state = initialState, action) => {
 
       return newState;
     }
+    case 'AUTHENTICATION_LOGOUT_FAILURE':
+      // TODO: Handle error
+      return state;
     default:
       return state;
   }

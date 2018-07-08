@@ -11,12 +11,13 @@ import {
 } from 'reactstrap';
 
 const renderLogin = () => <NavLink tag={Link} to="/account/login">Log In</NavLink>;
-const renderGreeting = name => <span>Welcome, {name}</span>;
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
 
+    this.logOutClick = this.logOutClick.bind(this);
+    this.renderGreeting = this.renderGreeting.bind(this);
     this.toggleNavbar = this.toggleNavbar.bind(this);
 
     this.state = {
@@ -24,10 +25,24 @@ class Header extends React.Component {
     };
   }
 
+  logOutClick(e) {
+    e.preventDefault();
+    const { logUserOut } = this.props;
+    logUserOut();
+  }
+
   toggleNavbar() {
     this.setState({
       isOpen: !this.state.isOpen,
     });
+  }
+
+  renderGreeting(name) {
+    return (
+      <span>
+        Welcome, {name} | <a href="/logout" onClick={this.logOutClick}>Log Out</a>
+      </span>
+    );
   }
 
   render() {
@@ -41,7 +56,7 @@ class Header extends React.Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                { isLoggedIn ? renderGreeting(firstName) : renderLogin() }
+                { isLoggedIn ? this.renderGreeting(firstName) : renderLogin() }
               </NavItem>
             </Nav>
           </Collapse>
