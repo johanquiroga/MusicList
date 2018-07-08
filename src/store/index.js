@@ -1,30 +1,27 @@
-import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
-import { logger } from 'redux-logger';
+import { applyMiddleware, createStore, compose } from 'redux';
+import thunk from 'redux-thunk';
+import { createLogger } from 'redux-logger';
 
+import reducers from '../reducers';
 import DevTools from '../components/shared/DevTools';
-import authentication from '../reducers/authentication';
-import progress from '../reducers/progress';
 
-const combinedReducers = combineReducers({
-  progress,
-  authentication,
-});
+const logger = createLogger();
 
 const enhancer = compose(
-  applyMiddleware(logger),
+  applyMiddleware(
+    thunk,
+    logger,
+  ),
   DevTools.instrument(),
 );
 
 const configureStore = (initialState) => {
-  const store = createStore(combinedReducers, initialState, enhancer);
+  const store = createStore(reducers, initialState, enhancer);
 
   // Hot reload reducers
   if (module.hot) {
-    module.hot.accept(
-      '../reducers/progress',
-      () =>
-        store.replaceReducer(progress),
-    );
+    module.hot.accept('../reducers', () =>
+      store.replaceReducer(reducers));
   }
 
   return store;
