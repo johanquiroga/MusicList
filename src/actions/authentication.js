@@ -10,6 +10,30 @@ export const sessionCheckSuccess = json => ({ type: 'AUTHENTICATION_SESSION_CHEC
 export const logoutFailure = error => ({ type: 'AUTHENTICATION_LOGOUT_FAILURE', error });
 export const logoutSuccess = () => ({ type: 'AUTHENTICATION_LOGOUT_SUCCESS' });
 
+// Check User Session
+export const checkSession = () => async (dispatch) => {
+  await fetch(
+    '/api/authentication/checksession',
+    {
+      method: 'GET',
+      credentials: 'same-origin',
+    },
+  )
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      return null;
+    })
+    .then((json) => {
+      if (json.username) {
+        return dispatch(sessionCheckSuccess(json));
+      }
+      return dispatch(sessionCheckFailure());
+    })
+    .catch(error => dispatch(sessionCheckFailure(error)));
+};
+
 // Log User In
 export const logUserIn = userData => async (dispatch) => {
   // turn on spinner
