@@ -26,13 +26,20 @@ router.post('/register', (req, res) => {
   });
 
   // Save, via Passport's "register" method, the user
-  User.register(newUser, req.body.password, (err, user) => {
+  User.register(newUser, req.body.password, (err) => {
     // If there's a problem, send back a JSON object with the error
     if (err) {
+      res.statusCode = 500;
       return res.json({ error: err });
     }
-    // Otherwise, send back a JSON object with the new user's info
-    return res.json({ user });
+
+    return passport.authenticate('local')(req, res, () => {
+      if (req.user) {
+        return res.json({ user: req.user });
+      }
+
+      return res.json({ error: 'There was an error logging in' });
+    });
   });
 });
 
@@ -52,6 +59,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Otherwise return an error
+    res.statusCode = 500;
     return res.json({ error: 'There was an error loggin in' });
   });
 });

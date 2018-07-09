@@ -44,11 +44,11 @@ class LoginPage extends React.Component {
         <div className="col-10 col-sm-7 col-md-5 col-lg-4">
           <Form>
             <FormGroup>
-              <Label for="userEmail">Email</Label>
+              <Label for="email">Email</Label>
               <Input
                 type="email"
                 name="email"
-                id="userEmail"
+                id="email"
                 placeholder="contact@johanquiroga.me"
                 value={this.state.email}
                 onChange={this.handleEmailChange}
@@ -56,11 +56,11 @@ class LoginPage extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <Label htmlFor="userPassword">Password</Label>
+              <Label for="password">Password</Label>
               <Input
                 type="password"
                 name="password"
-                id="userPassword"
+                id="password"
                 placeholder="password"
                 value={this.state.password}
                 onChange={this.handlePasswordChange}
