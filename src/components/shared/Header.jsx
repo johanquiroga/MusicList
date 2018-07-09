@@ -10,7 +10,16 @@ import {
   NavLink,
 } from 'reactstrap';
 
-const renderLogin = () => <NavLink tag={Link} to="/account/login">Log In</NavLink>;
+const renderLogin = () => (
+  <Nav className="ml-auto" navbar>
+    <NavItem>
+      <NavLink tag={Link} to="/account/login">Log In</NavLink>
+    </NavItem>
+    <NavItem>
+      <NavLink tag={Link} to="/account/register">Register</NavLink>
+    </NavItem>
+  </Nav>
+);
 
 class Header extends React.Component {
   constructor(props) {
@@ -39,9 +48,11 @@ class Header extends React.Component {
 
   renderGreeting(name) {
     return (
-      <span>
-        Welcome, {name} | <a href="/logout" onClick={this.logOutClick}>Log Out</a>
-      </span>
+      <Nav className="ml-auto" navbar>
+        <NavItem>
+          Welcome, {name} | <a href="/logout" onClick={this.logOutClick}>Log Out</a>
+        </NavItem>
+      </Nav>
     );
   }
 
@@ -54,11 +65,7 @@ class Header extends React.Component {
           <NavbarBrand tag={Link} to="/">MusicList</NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              <NavItem>
-                { isLoggedIn ? this.renderGreeting(firstName) : renderLogin() }
-              </NavItem>
-            </Nav>
+            { isLoggedIn ? this.renderGreeting(firstName) : renderLogin() }
           </Collapse>
         </Navbar>
       </header>

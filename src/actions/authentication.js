@@ -7,6 +7,9 @@ export const loginFailure = error => ({ type: 'AUTHENTICATION_LOGIN_FAILURE', er
 export const loginSuccess = json => ({ type: 'AUTHENTICATION_LOGIN_SUCCESS', json: json.user });
 export const logoutFailure = error => ({ type: 'AUTHENTICATION_LOGOUT_FAILURE', error });
 export const logoutSuccess = () => ({ type: 'AUTHENTICATION_LOGOUT_SUCCESS' });
+export const registrationFailure = () => ({ type: 'AUTHENTICATION_REGISTRATION_FAILURE' });
+export const registrationSuccess = () => ({ type: 'AUTHENTICATION_REGISTRATION_SUCCESS' });
+export const registrationSuccessViewed = () => ({ type: 'AUTHENTICATION_REGISTRATION_SUCCESS_VIEWED' });
 export const sessionCheckFailure = () => ({ type: 'AUTHENTICATION_SESSION_CHECK_FAILURE' });
 export const sessionCheckSuccess = json => ({ type: 'AUTHENTICATION_SESSION_CHECK_SUCCESS', json });
 
@@ -98,5 +101,45 @@ export const logUserOut = () => async (dispatch) => {
       dispatch(logoutFailure(error));
     });
 
+  return dispatch(decrementProgress());
+};
+
+// Register User
+export const registerUser = userData => async (dispatch) => {
+  // turn on spinner
+  dispatch(incrementProgress());
+
+  // contact login API
+  await fetch(
+    // where to contact
+    '/api/authentication/register',
+    {
+      method: 'POST',
+      body: JSON.stringify(userData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    },
+  )
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      return null;
+    })
+    .then(async (json) => {
+      if (json) {
+        await dispatch(loginSuccess(json));
+        await dispatch(registrationSuccess());
+      } else {
+        dispatch(registrationFailure(new Error('Registration Failed')));
+      }
+    })
+    .catch((error) => {
+      dispatch(registrationFailure(new Error(error)));
+    });
+
+  // turn off spinner
   return dispatch(decrementProgress());
 };

@@ -5,6 +5,7 @@ const initialState = {
   lastName: '',
   isLoggedIn: false,
   isLoggingIn: false,
+  registrationSucceeded: false,
 };
 const keys = Object.keys(initialState);
 
@@ -35,8 +36,19 @@ export default (state = initialState, action) => {
       return newState;
     }
     case 'AUTHENTICATION_LOGOUT_FAILURE':
+    case 'AUTHENTICATION_REGISTRATION_FAILURE':
       // TODO: Handle error
       return state;
+    case 'AUTHENTICATION_REGISTRATION_SUCCESS':
+      return {
+        ...state,
+        registrationSucceeded: true,
+      };
+    case 'AUTHENTICATION_REGISTRATION_SUCCESS_VIEWED':
+      return {
+        ...state,
+        registrationSucceeded: false,
+      };
     default:
       return state;
   }
