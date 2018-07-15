@@ -68,7 +68,7 @@ export const logUserIn = userData => async (dispatch) => {
       if (json) {
         dispatch(loginSuccess(json));
       } else {
-        dispatch(loginFailure(new Error('Authentication Failed')));
+        dispatch(loginFailure(new Error('Email or Password Incorrect. Please try again')));
       }
     })
     .catch((error) => {
@@ -94,11 +94,11 @@ export const logUserOut = () => async (dispatch) => {
       if (response.status === 200) {
         dispatch(logoutSuccess());
       } else {
-        dispatch(logoutFailure(`Error: ${response.status}`));
+        dispatch(logoutFailure(new Error(response.status)));
       }
     })
     .catch((error) => {
-      dispatch(logoutFailure(error));
+      dispatch(logoutFailure(new Error(error)));
     });
 
   return dispatch(decrementProgress());
@@ -133,7 +133,7 @@ export const registerUser = userData => async (dispatch) => {
         await dispatch(loginSuccess(json));
         await dispatch(registrationSuccess());
       } else {
-        dispatch(registrationFailure(new Error('Registration Failed')));
+        dispatch(registrationFailure(new Error('Registration Failed. Please try again')));
       }
     })
     .catch((error) => {

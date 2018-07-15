@@ -37,7 +37,6 @@ export default (state = initialState, action) => {
     }
     case 'AUTHENTICATION_LOGOUT_FAILURE':
     case 'AUTHENTICATION_REGISTRATION_FAILURE':
-      // TODO: Handle error
       return state;
     case 'AUTHENTICATION_REGISTRATION_SUCCESS':
       return {
