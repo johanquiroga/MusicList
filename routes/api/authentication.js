@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -78,6 +79,36 @@ router.post('/login', async (req, res) => {
 router.post('/logout', (req, res) => {
   req.logout();
   return res.json({ user: req.user });
+});
+
+// POST to saveresethash
+router.post('/saveresethash', async (req, res) => {
+  let result;
+  try {
+    // check and make sure the email exists
+    const query = User.findOne({ email: req.body.email });
+    const foundUser = await query.exec();
+
+    // If the user exists, save their password hash
+    const timeInMs = Date.now();
+    const hashString = `${req.body.email}${timeInMs}`;
+    const secret = 'SecretShouldGoHere';
+    const hash = crypto.createHmac('sha256', secret)
+      .update(hashString)
+      .digest('hex');
+    foundUser.passwordReset = hash;
+
+    foundUser.save((err) => {
+      if (err) {
+        result = res.json({ error: 'Something went wrong while attempting to reset your password. Please try again.' });
+      }
+      result = res.json({ success: true });
+    });
+  } catch (err) {
+    // if the user doesn't exist, error out
+    result = res.json({ error: 'Something went wrong while attempting to reset your password. Please try again.' });
+  }
+  return result;
 });
 
 module.exports = router;

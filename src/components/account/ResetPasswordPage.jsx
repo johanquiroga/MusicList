@@ -2,20 +2,18 @@ import React from 'react';
 import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
 import { Button, Label } from 'reactstrap';
 
-class LoginPage extends React.Component {
+class ResetPasswordPage extends React.Component {
   constructor(props) {
     super(props);
 
     // bound functions
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
 
     // component state
     this.state = {
       email: '',
-      password: '',
     };
   }
 
@@ -29,21 +27,21 @@ class LoginPage extends React.Component {
     }
   }
 
-  handlePasswordChange(e) {
-    this.setState({ password: e.target.value });
-  }
-
   // Handle submission once all form data is valid
   handleValidSubmit() {
-    const { loginFunction } = this.props;
+    const { resetPasswordFunction } = this.props;
     const formData = this.state;
-    loginFunction(formData);
+    resetPasswordFunction(formData.email);
   }
 
   render() {
     return (
       <div className="row justify-content-center">
         <div className="col-10 col-sm-7 col-md-5 col-lg-4">
+          <p>
+            If you&lsquo;d like to reset yoour password, please enter your email here
+            and a link to do so will be sent to the address you enter.
+          </p>
           <AvForm onValidSubmit={this.handleValidSubmit}>
             <AvGroup>
               <Label for="email">Email</Label>
@@ -59,21 +57,7 @@ class LoginPage extends React.Component {
               />
               <AvFeedback>A valid email is required to log in</AvFeedback>
             </AvGroup>
-            <AvGroup>
-              <Label for="password">Password</Label>
-              <AvInput
-                type="password"
-                name="password"
-                id="password"
-                placeholder="password"
-                value={this.state.password}
-                required
-                onChange={this.handlePasswordChange}
-                onKeyPress={this.handleKeyPress}
-              />
-              <AvFeedback>Password is required to log in</AvFeedback>
-            </AvGroup>
-            <Button color="primary">Log In</Button>
+            <Button color="primary">Reset Password</Button>
           </AvForm>
         </div>
       </div>
@@ -81,4 +65,4 @@ class LoginPage extends React.Component {
   }
 }
 
-export default LoginPage;
+export default ResetPasswordPage;
