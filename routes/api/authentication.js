@@ -16,31 +16,42 @@ router.get('/checksession', (req, res) => {
 });
 
 // POST to /register
-router.post('/register', (req, res) => {
-  // Create a user object to save, using values from incoming JSON
-  const newUser = new User({
-    username: req.body.username,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-  });
+router.post('/register', async (req, res) => {
+  // First check and make sure the email doesn't already exists
+  const query = User.findOne({ email: req.body.email });
+  const foundUser = await query.exec();
 
-  // Save, via Passport's "register" method, the user
-  User.register(newUser, req.body.password, (err) => {
-    // If there's a problem, send back a JSON object with the error
-    if (err) {
-      res.statusCode = 500;
-      return res.json({ error: err });
-    }
+  if (foundUser) {
+    return res.json({ error: 'Email or username already exists' });
+  }
 
-    return passport.authenticate('local')(req, res, () => {
-      if (req.user) {
-        return res.json({ user: req.user });
+  if (!foundUser) {
+    // Create a user object to save, using values from incoming JSON
+    const newUser = new User({
+      username: req.body.username,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+    });
+
+    // Save, via Passport's "register" method, the user
+    return User.register(newUser, req.body.password, (err) => {
+      // If there's a problem, send back a JSON object with the error
+      if (err) {
+        return res.json({ error: err });
       }
 
-      return res.json({ error: 'There was an error logging in' });
+      return passport.authenticate('local')(req, res, () => {
+        if (req.user) {
+          return res.json({ user: req.user });
+        }
+
+        return res.json({ error: 'There was an error registering the user' });
+      });
     });
-  });
+  }
+
+  return res.json({ error: 'There was an error registering the user' });
 });
 
 // POST to /login
@@ -59,7 +70,6 @@ router.post('/login', async (req, res) => {
     }
 
     // Otherwise return an error
-    res.statusCode = 500;
     return res.json({ error: 'There was an error loggin in' });
   });
 });
