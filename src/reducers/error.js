@@ -8,6 +8,7 @@ export default (state = initialState, action) => {
     case 'AUTHENTICATION_LOGIN_FAILURE':
     case 'AUTHENTICATION_LOGOUT_FAILURE':
     case 'AUTHENTICATION_REGISTRATION_FAILURE':
+    case 'AUTHENTICATION_PASSWORD_RESET_HASH_FAILURE':
       return {
         ...state,
         isError: true,
