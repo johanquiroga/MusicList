@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { savePassword } from '../../actions/authentication';
+import { passwordSaveClear, savePassword } from '../../actions/authentication';
 
 import ChangePasswordPage from './ChangePasswordPage';
 
@@ -11,20 +11,34 @@ class ChangePasswordPageContainer extends React.Component {
     this.sendPassword = this.sendPassword.bind(this);
   }
 
-  sendPassword(formData) {
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch(passwordSaveClear());
+  }
+
+  sendPassword(password) {
     const { dispatch } = this.props;
     const data = {
       hash: this.props.match.params.hash,
-      password: formData.password,
+      password,
     };
     dispatch(savePassword(data));
   }
 
   render() {
+    const { authentication } = this.props;
+
     return (
-      <ChangePasswordPage sendPasswordFunction={this.sendPassword} />
+      <ChangePasswordPage
+        authentication={authentication}
+        sendPasswordFunction={this.sendPassword}
+      />
     );
   }
 }
 
-export default connect()(ChangePasswordPageContainer);
+const mapStateToProps = state => ({
+  authentication: state.authentication,
+});
+
+export default connect(mapStateToProps)(ChangePasswordPageContainer);

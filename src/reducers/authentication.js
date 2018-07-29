@@ -6,6 +6,7 @@ const initialState = {
   isLoggedIn: false,
   isLoggingIn: false,
   isPasswordReset: false,
+  isPasswordChanged: false,
   registrationSucceeded: false,
 };
 const keys = Object.keys(initialState);
@@ -49,6 +50,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isPasswordReset: true,
+      };
+    case 'AUTHENTICATION_PASSWORD_SAVE_CLEAR':
+      return {
+        ...state,
+        isPasswordChanged: false,
+      };
+    case 'AUTHENTICATION_PASSWORD_SAVE_SUCCESS':
+      return {
+        ...state,
+        isPasswordChanged: true,
       };
     case 'AUTHENTICATION_REGISTRATION_SUCCESS':
       return {
