@@ -9,6 +9,7 @@ import ProfilePage from './account/ProfilePage';
 import RegisterPage from './account/RegisterPageContainer';
 import RegistrationSuccessPage from './account/RegistrationSuccessPageContainer';
 import ResetPasswordPage from './account/ResetPasswordPageContainer';
+import ChangePasswordPage from './account/ChangePasswordPageContainer';
 
 const Template = (props) => {
   const { authentication, progress } = props;
@@ -24,6 +25,7 @@ const Template = (props) => {
           <Route exact path="/account/register" component={RegisterPage} />
           <Route exact path="/account/registration-success" component={RegistrationSuccessPage} />
           <Route exact path="/account/reset-password" component={ResetPasswordPage} />
+          <Route path="/account/change-password/:hash" component={ChangePasswordPage} />
           <Route path="/account/profile/:id" component={ProfilePage} />
         </section>
         <div className="loader-wrapper" style={progress > 0 ? { display: 'block' } : { display: 'none' }}>
