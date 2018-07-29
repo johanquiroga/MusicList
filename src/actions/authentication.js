@@ -175,7 +175,7 @@ export const registerUser = userData => async (dispatch) => {
       return null;
     })
     .then(async (json) => {
-      if (json && json.username) {
+      if (json.user && json.user.username) {
         await dispatch(loginSuccess(json));
         await dispatch(registrationSuccess());
       } else {
