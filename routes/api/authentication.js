@@ -86,6 +86,34 @@ router.post('/logout', (req, res) => {
   return res.json({ user: req.user });
 });
 
+router.post('/savepassword', async (req, res) => {
+  let result;
+  try {
+    const query = User.findOne({ passwordReset: req.body.hash });
+    const foundUser = await query.exec();
+
+    if (foundUser) {
+      foundUser.setPassword(req.body.password, (err) => {
+        if (err) {
+          result = res.json({ error: 'Password could not be saved. Please try again' });
+        } else {
+          foundUser.save((error) => {
+            if (error) {
+              result = res.json({ error: 'Password could not be saved. Please try again.' });
+            } else {
+              result = res.json({ success: true });
+            }
+          });
+        }
+      });
+    }
+  } catch (e) {
+    result = res.json({ error: 'Reset hash nor found in database' });
+  }
+
+  return result;
+});
+
 // POST to saveresethash
 router.post('/saveresethash', async (req, res) => {
   let result;
