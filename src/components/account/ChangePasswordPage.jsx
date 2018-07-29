@@ -29,8 +29,9 @@ class ChangePasswordPage extends React.Component {
   }
 
   handleValidSubmit() {
+    const { sendPasswordFunction } = this.props;
     const formData = this.state;
-    // Handle submit
+    sendPasswordFunction(formData);
   }
 
   render() {

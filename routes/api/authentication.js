@@ -106,9 +106,11 @@ router.post('/savepassword', async (req, res) => {
           });
         }
       });
+    } else {
+      result = res.json({ error: 'Reset hash nor found in database' });
     }
   } catch (e) {
-    result = res.json({ error: 'Reset hash nor found in database' });
+    result = res.json({ error: 'There was an error connecting to the database' });
   }
 
   return result;
