@@ -1,7 +1,12 @@
+const appConfig = require('../../config.js');
 const crypto = require('crypto');
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const mailgun = require('mailgun-js')({
+  apiKey: appConfig.mailgun.apiKey,
+  domain: appConfig.mailgun.domain,
+});
 const User = require('../../models/user');
 
 const router = express.Router();
@@ -92,7 +97,7 @@ router.post('/saveresethash', async (req, res) => {
     // If the user exists, save their password hash
     const timeInMs = Date.now();
     const hashString = `${req.body.email}${timeInMs}`;
-    const secret = 'SecretShouldGoHere';
+    const { secret } = appConfig.crypto;
     const hash = crypto.createHmac('sha256', secret)
       .update(hashString)
       .digest('hex');
@@ -102,7 +107,22 @@ router.post('/saveresethash', async (req, res) => {
       if (err) {
         result = res.json({ error: 'Something went wrong while attempting to reset your password. Please try again.' });
       }
-      result = res.json({ success: true });
+
+      const emailData = {
+        from: `johanquiroga <postmaster@${appConfig.mailgun.domain}>`,
+        to: foundUser.email,
+        subject: 'Reset your password',
+        text: `A password reset has been requested for the MusicList account connected to this email address. If you made this request, please click the following link: https://musiclist.com/account/change-password/${foundUser.passwordReset} ... if you didn't make this request, feel free to ignore it!`,
+        html: `<p>A password reset has been requested for the MusicList account connected to this email address. If you made this request, please click the following link: <a href="https://musiclist.com/account/change-password/${foundUser.passwordReset}&quot; target="_blank">https://musiclist.com/account/change-password/${foundUser.passwordReset}</a>.</p><p>If you didn't make this request, feel free to ignore it!</p>`,
+      };
+
+      mailgun.messages().send(emailData, (error, body) => {
+        if (error || !body) {
+          result = res.json({ error: 'Something went wrong while attempting to send the email. Please try again.' });
+        } else {
+          result = res.json({ success: true });
+        }
+      });
     });
   } catch (err) {
     // if the user doesn't exist, error out

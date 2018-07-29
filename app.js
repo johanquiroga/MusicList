@@ -1,4 +1,5 @@
 require('babel-register');
+const appConfig = require('./config.js');
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -9,7 +10,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const expressSession = require('express-session')({
-  secret: '123456789',
+  secret: appConfig.expressSession.secret,
   resave: false,
   saveUninitialized: false,
 });
