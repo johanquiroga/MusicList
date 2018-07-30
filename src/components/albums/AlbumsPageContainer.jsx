@@ -1,33 +1,24 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { albumSearchClear, searchAlbums } from '../../actions/albums';
+import { addAlbum, albumSearchClear, searchAlbums } from '../../actions/albums';
 
 import AlbumsPage from './AlbumsPage';
 
 class AlbumsPageContainer extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.searchAlbumsFunction = this.searchAlbumsFunction.bind(this);
-  }
-
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch(albumSearchClear());
   }
 
-  searchAlbumsFunction(searchText) {
-    const { dispatch } = this.props;
-    dispatch(searchAlbums(searchText));
-  }
-
   render() {
-    const { albums } = this.props;
+    const { addAlbumFunction, albums, searchAlbumsFunction } = this.props;
 
     return (
       <AlbumsPage
+        addAlbumFunction={addAlbumFunction}
         albums={albums}
-        searchAlbumsFunction={this.searchAlbumsFunction}
+        searchAlbumsFunction={searchAlbumsFunction}
       />
     );
   }
@@ -37,4 +28,10 @@ const mapStateToProps = state => ({
   albums: state.albums,
 });
 
-export default connect(mapStateToProps)(AlbumsPageContainer);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  addAlbumFunction: addAlbum,
+  searchAlbumsFunction: searchAlbums,
+  dispatch,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(AlbumsPageContainer);

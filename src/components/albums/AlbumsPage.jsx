@@ -1,21 +1,21 @@
 import React from 'react';
 import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
-import { Button, Label } from 'reactstrap';
+import { Button, Label, Table } from 'reactstrap';
 
-const listAlbums = albums => albums.map(album => (
-  <p key={album.id}>
-    <img src={album.thumb} alt="album thumbnail" />
-    <strong>Title: {album.title}</strong><br />
-  </p>
-));
+// helpers
+const formatTitle = (discogsTitle, value) => discogsTitle.split('-')[value];
+const formatGenre = discogsGenre => discogsGenre.join(', ');
 
 class AlbumsPage extends React.Component {
   constructor(props) {
     super(props);
 
+    this.addAlbum = this.addAlbum.bind(this);
+    this.createTable = this.createTable.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
+    this.listAlbums = this.listAlbums.bind(this);
 
     this.state = {
       searchText: '',
@@ -38,6 +38,46 @@ class AlbumsPage extends React.Component {
     const { searchAlbumsFunction } = this.props;
     const formData = this.state;
     searchAlbumsFunction(formData.searchText);
+  }
+
+  createTable(albums) {
+    return (
+      <Table striped responsive>
+        <thead>
+          <tr>
+            <th />
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Genre(s)</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {this.listAlbums(albums)}
+        </tbody>
+      </Table>
+    );
+  }
+
+  listAlbums(albums) {
+    return albums.map(album => (
+      <tr key={album.id}>
+        <td><img src={album.thumb} alt="album thumbnail" width="80" height="80" /></td>
+        <td>{formatTitle(album.title, 1)}</td>
+        <td>{formatTitle(album.title, 0)}</td>
+        <td>{formatGenre(album.genre)}</td>
+        <td>
+          <Button color="primary" outline id={album.id} onClick={this.addAlbum}>
+            Add To My List
+          </Button>
+        </td>
+      </tr>
+    ));
+  }
+
+  addAlbum(e) {
+    const { addAlbumFunction } = this.props;
+    addAlbumFunction(e.target.id);
   }
 
   render() {
@@ -72,8 +112,12 @@ class AlbumsPage extends React.Component {
         </div>
         <div className="row">
           <div className="col-12 col-sm-12">
-            { albums && albums.length > 0 ? <div><hr /><h2>Albums</h2></div> : null }
-            { albums && albums.length > 0 ? listAlbums(albums) : null }
+            {albums && albums.length > 0 ? <h2>Albums</h2> : null}
+            <div className="row">
+              <div className="col-sm-12 col-lg-12">
+                {albums && albums.length > 0 ? this.createTable(albums) : null}
+              </div>
+            </div>
           </div>
         </div>
       </div>
