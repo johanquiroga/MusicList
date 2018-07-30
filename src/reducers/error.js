@@ -10,6 +10,7 @@ export default (state = initialState, action) => {
     case 'AUTHENTICATION_REGISTRATION_FAILURE':
     case 'AUTHENTICATION_PASSWORD_RESET_HASH_FAILURE':
     case 'AUTHENTICATION_PASSWORD_SAVE_FAILURE':
+    case 'MUSIC_ALBUM_SEARCH_FAILURE':
       return {
         ...state,
         isError: true,
