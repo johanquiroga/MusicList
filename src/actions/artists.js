@@ -8,6 +8,8 @@ export const addArtistSuccess = json => ({ type: 'MUSIC_ARTIST_ADD_SUCCESS', jso
 export const artistSearchClear = () => ({ type: 'MUSIC_ARTIST_SEARCH_CLEAR' });
 export const artistSearchFailure = error => ({ type: 'MUSIC_ARTIST_SEARCH_FAILURE', error });
 export const artistSearchSuccess = json => ({ type: 'MUSIC_ARTIST_SEARCH_SUCCESS', json });
+export const artistsPopulateFailure = error => ({ type: 'MUSIC_ARTISTS_POPULATE_FAILURE', error });
+export const artistsPopulateSuccess = json => ({ type: 'MUSIC_ARTISTS_POPULATE_SUCCESS', json });
 
 // Add an Artist
 export const addArtist = id => async (dispatch) => {
@@ -39,6 +41,39 @@ export const addArtist = id => async (dispatch) => {
       return dispatch(addArtistFailure(new Error(json.error)));
     })
     .catch(error => dispatch(addArtistFailure(new Error(error))));
+
+  return dispatch(decrementProgress());
+};
+
+export const populateArtists = artists => async (dispatch) => {
+  dispatch(clearError());
+
+  dispatch(incrementProgress());
+
+  await fetch(
+    '/api/artists/populate',
+    {
+      method: 'POST',
+      body: JSON.stringify(artists),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    },
+  )
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      return null;
+    })
+    .then((json) => {
+      if (json && json.artists) {
+        return dispatch(artistsPopulateSuccess(json.artists));
+      }
+      return dispatch(artistsPopulateFailure(new Error(json.error)));
+    })
+    .catch(error => dispatch(artistsPopulateFailure(new Error(error))));
 
   return dispatch(decrementProgress());
 };

@@ -86,6 +86,20 @@ router.post('/add', async (req, res) => {
   return result;
 });
 
+// POST to /populate
+router.post('/populate', (req, res, next) => {
+  // Get album data from array
+  Artist.find({
+    discogsId: { $in: req.body },
+  }, (err, artists) => {
+    if (err) {
+      return res.json({ error: err.message });
+    }
+
+    return res.json({ artists });
+  });
+});
+
 // POST to search
 router.post('/search', async (req, res) => {
   await discogsDB.search(req.body, (err, data) => {
