@@ -33,7 +33,6 @@ export const addAlbum = id => async (dispatch) => {
       return null;
     })
     .then((json) => {
-      console.log(json);
       if (json.user.email) {
         return dispatch(addAlbumSuccess(json.user));
       }
