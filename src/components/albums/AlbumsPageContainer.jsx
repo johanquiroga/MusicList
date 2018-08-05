@@ -15,6 +15,7 @@ class AlbumsPageContainer extends React.Component {
     const {
       addAlbumFunction,
       albums,
+      authentication,
       searchAlbumsFunction,
       user,
     } = this.props;
@@ -23,6 +24,7 @@ class AlbumsPageContainer extends React.Component {
       <AlbumsPage
         addAlbumFunction={addAlbumFunction}
         albums={albums}
+        authentication={authentication}
         searchAlbumsFunction={searchAlbumsFunction}
         user={user}
       />
@@ -32,6 +34,7 @@ class AlbumsPageContainer extends React.Component {
 
 const mapStateToProps = state => ({
   albums: state.albums,
+  authentication: state.authentication,
   user: state.user,
 });
 

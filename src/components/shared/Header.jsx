@@ -50,21 +50,37 @@ class Header extends React.Component {
     return (
       <Nav className="ml-auto" navbar>
         <NavItem>
-          Welcome, {name} | <a href="/logout" onClick={this.logOutClick}>Log Out</a>
+          <span className="nav-link">Welcome, {name}
+            &nbsp;| <a href="/logout" onClick={this.logOutClick}>Log Out</a>
+          </span>
         </NavItem>
       </Nav>
     );
   }
 
   render() {
-    const { isLoggedIn, firstName } = this.props.authentication;
+    const { isLoggedIn, firstName, username } = this.props.authentication;
 
     return (
       <header className="wrapper">
-        <Navbar color="faded" light expand="md">
+        <Navbar color="faded" light expand>
           <NavbarBrand tag={Link} to="/">MusicList</NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink tag={Link} to="/albums">Albums</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/artists">Artists</NavLink>
+              </NavItem>
+              { username && username !== '' ?
+                <NavItem>
+                  <NavLink tag={Link} to={`/list/${username}`}>My List</NavLink>
+                </NavItem> :
+                null
+              }
+            </Nav>
             { isLoggedIn ? this.renderGreeting(firstName) : renderLogin() }
           </Collapse>
         </Navbar>

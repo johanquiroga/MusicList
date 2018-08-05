@@ -69,3 +69,25 @@ header {
 .form-control::-moz-placeholder { color: #EEE }
 .form-control:-ms-input-placeholder { color: #EEE }
 .form-control:-moz-placeholder { color: #EEE }
+
+/* Flexbox tables */
+table.flex {
+  tr {
+    display: flex;
+
+    th, td {
+      flex-basis: 25%;
+
+      &.thumb {
+        flex-basis: auto;
+        width: 100px;
+        text-align: center;
+        padding: 10px;
+
+        img {
+          width: 80px;
+        }
+      }
+    }
+  }
+}

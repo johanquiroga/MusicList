@@ -44,7 +44,7 @@ class ListPageContainer extends React.Component {
   }
 
   render() {
-    const { list } = this.props;
+    const { authentication, list } = this.props;
 
     if (list.username === '') {
       return (<p />);
@@ -52,9 +52,10 @@ class ListPageContainer extends React.Component {
 
     return (
       <ListPage
-        username={list.username}
         albums={list.albumsPopulated}
         artists={list.artistsPopulated}
+        authentication={authentication}
+        username={list.username}
       />
     );
   }
@@ -69,6 +70,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = state => ({
+  authentication: state.authentication,
   list: state.list,
 });
 

@@ -14,6 +14,7 @@ class ArtistsPageContainer extends React.Component {
   render() {
     const {
       addArtistFunction,
+      authentication,
       artists,
       searchArtistsFunction,
       user,
@@ -23,6 +24,7 @@ class ArtistsPageContainer extends React.Component {
       <ArtistsPage
         addArtistFunction={addArtistFunction}
         artists={artists}
+        authentication={authentication}
         searchArtistsFunction={searchArtistsFunction}
         user={user}
       />
@@ -31,6 +33,7 @@ class ArtistsPageContainer extends React.Component {
 }
 
 const mapStateToProps = state => ({
+  authentication: state.authentication,
   artists: state.artists,
   user: state.user,
 });
