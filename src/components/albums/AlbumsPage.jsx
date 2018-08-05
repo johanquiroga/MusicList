@@ -60,6 +60,7 @@ class AlbumsPage extends React.Component {
   }
 
   listAlbums(albums) {
+    const { user } = this.props;
     return albums.map(album => (
       <tr key={album.id}>
         <td><img src={album.thumb} alt="album thumbnail" width="80" height="80" /></td>
@@ -67,9 +68,12 @@ class AlbumsPage extends React.Component {
         <td>{formatTitle(album.title, 0)}</td>
         <td>{formatGenre(album.genre)}</td>
         <td>
-          <Button color="primary" outline id={album.id} onClick={this.addAlbum}>
-            Add To My List
-          </Button>
+          { user.albums.indexOf(album.id) < 0 ?
+            <Button color="primary" outline id={album.id} onClick={this.addAlbum}>
+              Add To My List
+            </Button> :
+            <span>Already Listed</span>
+          }
         </td>
       </tr>
     ));

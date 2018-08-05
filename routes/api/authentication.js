@@ -15,7 +15,7 @@ mongoose.Promise = global.Promise;
 
 router.get('/checksession', (req, res) => {
   if (req.user) {
-    return res.json(req.user);
+    return res.json({ user: req.user });
   }
 
   return res.json({});

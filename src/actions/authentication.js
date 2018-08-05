@@ -5,7 +5,7 @@ import { clearError } from './error';
 // Action creators
 export const loginAttempt = () => ({ type: 'AUTHENTICATION_LOGIN_ATTEMPT' });
 export const loginFailure = error => ({ type: 'AUTHENTICATION_LOGIN_FAILURE', error });
-export const loginSuccess = json => ({ type: 'AUTHENTICATION_LOGIN_SUCCESS', json: json.user });
+export const loginSuccess = json => ({ type: 'AUTHENTICATION_LOGIN_SUCCESS', json });
 
 export const logoutFailure = error => ({ type: 'AUTHENTICATION_LOGOUT_FAILURE', error });
 export const logoutSuccess = () => ({ type: 'AUTHENTICATION_LOGOUT_SUCCESS' });
@@ -41,8 +41,8 @@ export const checkSession = () => async (dispatch) => {
       return null;
     })
     .then((json) => {
-      if (json.username) {
-        return dispatch(sessionCheckSuccess(json));
+      if (json && json.user && json.user.username) {
+        return dispatch(sessionCheckSuccess(json.user));
       }
       return dispatch(sessionCheckFailure());
     })
@@ -114,8 +114,8 @@ export const logUserIn = userData => async (dispatch) => {
       return null;
     })
     .then((json) => {
-      if (json) {
-        dispatch(loginSuccess(json));
+      if (json && json.user) {
+        dispatch(loginSuccess(json.user));
       } else {
         dispatch(loginFailure(new Error('Email or Password Incorrect. Please try again')));
       }
@@ -183,8 +183,8 @@ export const registerUser = userData => async (dispatch) => {
       return null;
     })
     .then(async (json) => {
-      if (json.user && json.user.username) {
-        await dispatch(loginSuccess(json));
+      if (json && json.user && json.user.username) {
+        await dispatch(loginSuccess(json.user));
         await dispatch(registrationSuccess());
       } else {
         dispatch(registrationFailure(new Error(json.error.message ? 'Email or username already exists' : json.error)));
