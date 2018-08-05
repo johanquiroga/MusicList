@@ -16,6 +16,11 @@ export default (state = initialState, action) => {
         ...state,
         albums: [...state.albums, ...action.json.albums],
       };
+    case 'MUSIC_ARTIST_ADD_SUCCESS':
+      return {
+        ...state,
+        artists: [...state.artists, ...action.json.artists],
+      };
     default:
       return state;
   }

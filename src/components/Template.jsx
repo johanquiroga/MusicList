@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import AlbumsPage from './albums/AlbumsPageContainer';
+import ArtistsPage from './artists/ArtistsPageContainer';
 import ErrorBox from './shared/ErrorBoxContainer';
 import HeaderContainer from './shared/HeaderContainer';
 import HomePage from './home/HomePageContainer';
@@ -29,6 +30,7 @@ const Template = (props) => {
           <Route path="/account/change-password/:hash" component={ChangePasswordPage} />
           <Route path="/account/profile/:id" component={ProfilePage} />
           <Route path="/albums" component={AlbumsPage} />
+          <Route path="/artists" component={ArtistsPage} />
         </section>
         <div className="loader-wrapper" style={progress > 0 ? { display: 'block' } : { display: 'none' }}>
           <div className="loader-box">

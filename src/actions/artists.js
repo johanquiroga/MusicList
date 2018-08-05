@@ -3,20 +3,20 @@ import { decrementProgress, incrementProgress } from './progress';
 import { clearError } from './error';
 
 // Action creators
-export const addAlbumFailure = error => ({ type: 'MUSIC_ALBUM_ADD_FAILURE', error });
-export const addAlbumSuccess = json => ({ type: 'MUSIC_ALBUM_ADD_SUCCESS', json });
-export const albumSearchClear = () => ({ type: 'MUSIC_ALBUM_SEARCH_CLEAR' });
-export const albumSearchFailure = error => ({ type: 'MUSIC_ALBUM_SEARCH_FAILURE', error });
-export const albumSearchSuccess = json => ({ type: 'MUSIC_ALBUM_SEARCH_SUCCESS', json });
+export const addArtistFailure = error => ({ type: 'MUSIC_ARTIST_ADD_FAILURE', error });
+export const addArtistSuccess = json => ({ type: 'MUSIC_ARTIST_ADD_SUCCESS', json });
+export const artistSearchClear = () => ({ type: 'MUSIC_ARTIST_SEARCH_CLEAR' });
+export const artistSearchFailure = error => ({ type: 'MUSIC_ARTIST_SEARCH_FAILURE', error });
+export const artistSearchSuccess = json => ({ type: 'MUSIC_ARTIST_SEARCH_SUCCESS', json });
 
-// Add an Album
-export const addAlbum = id => async (dispatch) => {
+// Add an Artist
+export const addArtist = id => async (dispatch) => {
   dispatch(clearError());
 
   dispatch(incrementProgress());
 
   await fetch(
-    '/api/albums/add',
+    '/api/artists/add',
     {
       method: 'POST',
       body: JSON.stringify({ id }),
@@ -34,30 +34,29 @@ export const addAlbum = id => async (dispatch) => {
     })
     .then((json) => {
       if (json.user.email) {
-        return dispatch(addAlbumSuccess(json.user));
+        return dispatch(addArtistSuccess(json.user));
       }
-      return dispatch(addAlbumFailure(new Error(json.error)));
+      return dispatch(addArtistFailure(new Error(json.error)));
     })
-    .catch(error => dispatch(addAlbumFailure(new Error(error))));
+    .catch(error => dispatch(addArtistFailure(new Error(error))));
 
   return dispatch(decrementProgress());
 };
 
-// Search Albums
-export const searchAlbums = searchText => async (dispatch) => {
+// Search Artists
+export const searchArtists = searchText => async (dispatch) => {
   dispatch(clearError());
 
   dispatch(incrementProgress());
 
   const searchQuery = {
     q: searchText,
-    type: 'master',
-    format: 'album',
+    type: 'artist',
   };
 
   // Send packet to our API, which will communicate with Discogs
   await fetch(
-    '/api/albums/search',
+    '/api/artists/search',
     {
       method: 'POST',
       body: JSON.stringify(searchQuery),
@@ -75,11 +74,11 @@ export const searchAlbums = searchText => async (dispatch) => {
     })
     .then((json) => {
       if (json.results) {
-        return dispatch(albumSearchSuccess(json));
+        return dispatch(artistSearchSuccess(json));
       }
-      return dispatch(albumSearchFailure(new Error(json.error)));
+      return dispatch(artistSearchFailure(new Error(json.error)));
     })
-    .catch(error => dispatch(albumSearchFailure(new Error(error))));
+    .catch(error => dispatch(artistSearchFailure(new Error(error))));
 
   return dispatch(decrementProgress());
 };
