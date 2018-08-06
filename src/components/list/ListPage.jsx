@@ -11,10 +11,20 @@ const formatMembers = discogsMembers =>
 class ArtistsPage extends React.Component {
   constructor(props) {
     super(props);
+
+    this.createTable = this.createTable.bind(this);
+    this.listItems = this.listItems.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
 
   deleteItem(id, type) {
-    console.log(id, type);
+    const { deleteAlbumFunction, deleteArtistFunction } = this.props;
+    if (type === 'album') {
+      deleteAlbumFunction(id);
+    }
+    if (type === 'artist') {
+      deleteArtistFunction(id);
+    }
   }
 
   createTable(items) {

@@ -5,9 +5,14 @@ import { clearError } from './error';
 // Action creators
 export const addAlbumFailure = error => ({ type: 'MUSIC_ALBUM_ADD_FAILURE', error });
 export const addAlbumSuccess = json => ({ type: 'MUSIC_ALBUM_ADD_SUCCESS', json });
+
+export const albumDeleteFailure = error => ({ type: 'MUSIC_ALBUM_DELETE_FAILURE', error });
+export const albumDeleteSuccess = json => ({ type: 'MUSIC_ALBUM_DELETE_SUCCESS', json });
+
 export const albumSearchClear = () => ({ type: 'MUSIC_ALBUM_SEARCH_CLEAR' });
 export const albumSearchFailure = error => ({ type: 'MUSIC_ALBUM_SEARCH_FAILURE', error });
 export const albumSearchSuccess = json => ({ type: 'MUSIC_ALBUM_SEARCH_SUCCESS', json });
+
 export const albumsPopulateFailure = error => ({ type: 'MUSIC_ALBUMS_POPULATE_FAILURE', error });
 export const albumsPopulateSuccess = json => ({ type: 'MUSIC_ALBUMS_POPULATE_SUCCESS', json });
 
@@ -41,6 +46,46 @@ export const addAlbum = id => async (dispatch) => {
       return dispatch(addAlbumFailure(new Error(json.error)));
     })
     .catch(error => dispatch(addAlbumFailure(new Error(error))));
+
+  return dispatch(decrementProgress());
+};
+
+// Delete an album from user's list
+export const deleteAlbum = albumId => async (dispatch) => {
+  dispatch(clearError());
+
+  dispatch(incrementProgress());
+
+  await fetch(
+    '/api/albums/delete',
+    {
+      method: 'POST',
+      body: JSON.stringify({ albumId }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    },
+  )
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      return null;
+    })
+    .then((json) => {
+      if (!json.error) {
+        dispatch(populateAlbums(json.albums)); // eslint-disable-line
+      }
+      return json;
+    })
+    .then((json) => {
+      if (!json.error) {
+        return dispatch(albumDeleteSuccess(json));
+      }
+      return dispatch(albumDeleteFailure(new Error(json.error)));
+    })
+    .catch(error => dispatch(albumDeleteFailure(new Error(error))));
 
   return dispatch(decrementProgress());
 };

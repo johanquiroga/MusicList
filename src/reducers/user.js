@@ -12,11 +12,13 @@ export default (state = initialState, action) => {
         artists: [...state.artists, ...action.json.artists],
       };
     case 'MUSIC_ALBUM_ADD_SUCCESS':
+    case 'MUSIC_ALBUM_DELETE_SUCCESS':
       return {
         ...state,
         albums: [...state.albums, ...action.json.albums],
       };
     case 'MUSIC_ARTIST_ADD_SUCCESS':
+    case 'MUSIC_ARTIST_DELETE_SUCCESS':
       return {
         ...state,
         artists: [...state.artists, ...action.json.artists],
