@@ -1,12 +1,26 @@
 import React from 'react';
-import { Card, CardBody, CardText } from 'reactstrap';
+import { Card, CardBody, CardText, CardTitle } from 'reactstrap';
 
-const Sidebar = () => (
+const formatAlbum = (album) => {
+  if (!album) {
+    return null;
+  }
+
+  return (
+    <span className="text-center">
+      <img src={album.thumb} alt="album thumb" /><br />
+      {album.title}
+    </span>
+  );
+};
+
+const Sidebar = ({ latestAlbum }) => (
   <aside className="col-sm-12 col-md-4">
     <Card>
       <CardBody>
-        <CardText>
-          Sidebar Item
+        <CardTitle className="text-center">Latest Album</CardTitle>
+        <CardText className="text-center">
+          {latestAlbum && latestAlbum.title ? formatAlbum(latestAlbum) : null}
         </CardText>
       </CardBody>
     </Card>

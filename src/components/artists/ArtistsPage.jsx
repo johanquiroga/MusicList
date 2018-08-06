@@ -9,7 +9,6 @@ class ArtistsPage extends React.Component {
     this.addArtist = this.addArtist.bind(this);
     this.createTable = this.createTable.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
     this.listArtists = this.listArtists.bind(this);
 
@@ -22,12 +21,6 @@ class ArtistsPage extends React.Component {
     this.setState({
       searchText: e.target.value,
     });
-  }
-
-  handleKeyPress(target) {
-    if (target.charCode === 13) {
-      this.handleValidSubmit();
-    }
   }
 
   handleValidSubmit() {

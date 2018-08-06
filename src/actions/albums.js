@@ -9,6 +9,9 @@ export const addAlbumSuccess = json => ({ type: 'MUSIC_ALBUM_ADD_SUCCESS', json 
 export const albumDeleteFailure = error => ({ type: 'MUSIC_ALBUM_DELETE_FAILURE', error });
 export const albumDeleteSuccess = json => ({ type: 'MUSIC_ALBUM_DELETE_SUCCESS', json });
 
+export const albumLatestFailure = error => ({ type: 'MUSIC_ALBUM_LATEST_FAILURE', error });
+export const albumLatestSuccess = json => ({ type: 'MUSIC_ALBUM_LATEST_SUCCESS', json });
+
 export const albumSearchClear = () => ({ type: 'MUSIC_ALBUM_SEARCH_CLEAR' });
 export const albumSearchFailure = error => ({ type: 'MUSIC_ALBUM_SEARCH_FAILURE', error });
 export const albumSearchSuccess = json => ({ type: 'MUSIC_ALBUM_SEARCH_SUCCESS', json });
@@ -86,6 +89,44 @@ export const deleteAlbum = albumId => async (dispatch) => {
       return dispatch(albumDeleteFailure(new Error(json.error)));
     })
     .catch(error => dispatch(albumDeleteFailure(new Error(error))));
+
+  return dispatch(decrementProgress());
+};
+
+export const getLatestAlbum = () => async (dispatch) => {
+  dispatch(incrementProgress());
+
+  const searchQuery = {
+    q: '',
+    type: 'master',
+    format: 'album',
+    sort_order: 'asc',
+  };
+
+  await fetch(
+    '/api/albums/search',
+    {
+      method: 'POST',
+      body: JSON.stringify(searchQuery),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    },
+  )
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      return null;
+    })
+    .then((json) => {
+      if (json.results) {
+        return dispatch(albumLatestSuccess(json.results[0]));
+      }
+      return dispatch(albumLatestFailure(new Error(json.error)));
+    })
+    .catch(error => dispatch(albumLatestFailure(new Error(error))));
 
   return dispatch(decrementProgress());
 };
