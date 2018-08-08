@@ -3,18 +3,16 @@ const appConfig = require('./config.js');
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
+const helmet = require('helmet');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const mongoose = require('mongoose');
+const RateLimit = require('express-rate-limit');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const expressSession = require('express-session')({
-  secret: appConfig.expressSession.secret,
-  resave: false,
-  saveUninitialized: false,
-});
+const expressSession = require('express-session');
 const webpack = require('webpack');
 const webpackConfig = require('./webpack.config.babel');
 const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -44,10 +42,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(compression());
 app.use(cookieParser());
-app.use(expressSession);
+app.use(helmet());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Express session
+const sessionValues = {
+  cookie: {},
+  name: 'sessionId',
+  resave: false,
+  saveUninitialized: false,
+  secret: appConfig.expressSession.secret,
+};
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1);
+  sessionValues.cookie.secure = true;
+}
+app.use(expressSession(sessionValues));
 
 // Webpack Server
 if (process.env.NODE_ENV !== 'production') {
@@ -64,6 +76,13 @@ if (process.env.NODE_ENV !== 'production') {
     log: console.log,
   }));
 }
+
+const apiLimiter = new RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 min
+  max: 50,
+  delayMs: 0,
+});
+app.use('/api/', apiLimiter);
 
 app.use('/api', api);
 app.use('/api/albums', albums);

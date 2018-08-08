@@ -1,0 +1,44 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.12.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:chownr:20180731':
+    - compression-webpack-plugin > cacache > chownr:
+        reason: None given
+        expires: '2018-09-07T01:18:11.671Z'
+    - webpack > uglifyjs-webpack-plugin > cacache > chownr:
+        reason: None given
+        expires: '2018-09-07T01:18:11.671Z'
+    - babel-loader > webpack > uglifyjs-webpack-plugin > cacache > chownr:
+        reason: None given
+        expires: '2018-09-07T01:18:11.672Z'
+    - compression-webpack-plugin > webpack > uglifyjs-webpack-plugin > cacache > chownr:
+        reason: None given
+        expires: '2018-09-07T01:18:11.672Z'
+    - extract-text-webpack-plugin > webpack > uglifyjs-webpack-plugin > cacache > chownr:
+        reason: None given
+        expires: '2018-09-07T01:18:11.672Z'
+    - sass-loader > webpack > uglifyjs-webpack-plugin > cacache > chownr:
+        reason: None given
+        expires: '2018-09-07T01:18:11.672Z'
+    - extract-text-webpack-plugin > schema-utils > webpack > uglifyjs-webpack-plugin > cacache > chownr:
+        reason: None given
+        expires: '2018-09-07T01:18:11.672Z'
+    - style-loader > schema-utils > webpack > uglifyjs-webpack-plugin > cacache > chownr:
+        reason: None given
+        expires: '2018-09-07T01:18:11.672Z'
+  'npm:cryptiles:20180710':
+    - node-sass > node-gyp > request > hawk > cryptiles:
+        reason: None given
+        expires: '2018-09-07T01:18:11.672Z'
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:hoek:20180212':
+    - node-sass > node-gyp > request > hawk > boom > hoek:
+        patched: '2018-08-08T01:14:31.548Z'
+    - node-sass > node-gyp > request > hawk > sntp > hoek:
+        patched: '2018-08-08T01:14:31.548Z'
+    - node-sass > node-gyp > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-08-08T01:14:31.548Z'
+    - node-sass > node-gyp > request > hawk > hoek:
+        patched: '2018-08-08T01:14:31.548Z'

@@ -1,6 +1,8 @@
 const appConfig = require('../../config.js');
 const crypto = require('crypto');
+const createDOMPurify = require('dompurify');
 const express = require('express');
+const { JSDOM } = require('jsdom');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const mailgun = require('mailgun-js')({
@@ -32,13 +34,19 @@ router.post('/register', async (req, res) => {
   }
 
   if (!foundUser) {
+    // sanitize dara
+    const { window } = (new JSDOM(''));
+    const DOMPurify = createDOMPurify(window);
+    const sanitizedBody = {
+      username: DOMPurify.sanitize(req.body.username),
+      email: DOMPurify.sanitize(req.body.email),
+      firstName: DOMPurify.sanitize(req.body.firstName),
+      lastName: DOMPurify.sanitize(req.body.lastName),
+      password: req.body.password,
+    };
+
     // Create a user object to save, using values from incoming JSON
-    const newUser = new User({
-      username: req.body.username,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-    });
+    const newUser = new User(sanitizedBody);
 
     // Save, via Passport's "register" method, the user
     return User.register(newUser, req.body.password, (err) => {
