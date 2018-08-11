@@ -43,10 +43,10 @@ export const addAlbum = id => async (dispatch) => {
       return null;
     })
     .then((json) => {
-      if (json.user.email) {
+      if (json && json.user && json.user.email) {
         return dispatch(addAlbumSuccess(json.user));
       }
-      return dispatch(addAlbumFailure(new Error(json.error)));
+      return dispatch(addAlbumFailure(new Error((json && json.error) || 'Something went wrong')));
     })
     .catch(error => dispatch(addAlbumFailure(new Error(error))));
 

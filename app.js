@@ -40,13 +40,8 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(compression());
 app.use(cookieParser());
-app.use(helmet());
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(compression());
 // Express session
 const sessionValues = {
   cookie: {},
@@ -57,9 +52,13 @@ const sessionValues = {
 };
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1);
-  // sessionValues.cookie.secure = true;
+  sessionValues.cookie.secure = true;
 }
 app.use(expressSession(sessionValues));
+app.use(helmet());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Webpack Server
 if (process.env.NODE_ENV !== 'production') {

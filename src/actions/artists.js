@@ -40,10 +40,10 @@ export const addArtist = id => async (dispatch) => {
       return null;
     })
     .then((json) => {
-      if (json.user.email) {
+      if (json && json.user && json.user.email) {
         return dispatch(addArtistSuccess(json.user));
       }
-      return dispatch(addArtistFailure(new Error(json.error)));
+      return dispatch(addArtistFailure(new Error((json && json.error) || 'Something went wrong')));
     })
     .catch(error => dispatch(addArtistFailure(new Error(error))));
 
